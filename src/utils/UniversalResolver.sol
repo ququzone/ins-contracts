@@ -5,7 +5,7 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {LowLevelCallUtils} from "./LowLevelCallUtils.sol";
-import {ENS} from "../registry/ENS.sol";
+import {INS} from "../registry/INS.sol";
 import {IExtendedResolver} from "../resolvers/profiles/IExtendedResolver.sol";
 import {Resolver, INameResolver, IAddrResolver} from "../resolvers/Resolver.sol";
 import {NameEncoder} from "./NameEncoder.sol";
@@ -44,7 +44,7 @@ interface BatchGateway {
 
 /**
  * The Universal Resolver is a contract that handles the work of resolving a name entirely onchain,
- * making it possible to make a single smart contract call to resolve an ENS name.
+ * making it possible to make a single smart contract call to resolve an INS name.
  */
 contract UniversalResolver is ERC165, Ownable {
     using Address for address;
@@ -53,10 +53,10 @@ contract UniversalResolver is ERC165, Ownable {
     using HexUtils for bytes;
 
     string[] public batchGatewayURLs;
-    ENS public immutable registry;
+    INS public immutable registry;
 
     constructor(address _registry, string[] memory _urls) {
-        registry = ENS(_registry);
+        registry = INS(_registry);
         batchGatewayURLs = _urls;
     }
 
@@ -65,9 +65,9 @@ contract UniversalResolver is ERC165, Ownable {
     }
 
     /**
-     * @dev Performs ENS name resolution for the supplied name and resolution data.
+     * @dev Performs INS name resolution for the supplied name and resolution data.
      * @param name The name to resolve, in normalised and DNS-encoded form.
-     * @param data The resolution data, as specified in ENSIP-10.
+     * @param data The resolution data, as specified in INSIP-10.
      * @return The result of resolving the name.
      */
     function resolve(bytes calldata name, bytes memory data) external view returns (bytes memory, address) {
@@ -141,7 +141,7 @@ contract UniversalResolver is ERC165, Ownable {
     }
 
     /**
-     * @dev Performs ENS name reverse resolution for the supplied reverse name.
+     * @dev Performs INS name reverse resolution for the supplied reverse name.
      * @param reverseName The reverse name to resolve, in normalised and DNS-encoded form. e.g. b6E040C9ECAaE172a89bD561c5F73e1C48d28cd9.addr.reverse
      * @return The resolved name, the resolved address, the reverse resolver address, and the resolver address.
      */

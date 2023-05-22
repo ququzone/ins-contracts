@@ -8,8 +8,8 @@ abstract contract TextResolver is ITextResolver, ResolverBase {
     mapping(uint64 => mapping(bytes32 => mapping(string => string))) versionable_texts;
 
     /**
-     * Sets the text data associated with an ENS node and key.
-     * May only be called by the owner of that node in the ENS registry.
+     * Sets the text data associated with an INS node and key.
+     * May only be called by the owner of that node in the INS registry.
      * @param node The node to update.
      * @param key The key to set.
      * @param value The text data value to set.
@@ -20,8 +20,8 @@ abstract contract TextResolver is ITextResolver, ResolverBase {
     }
 
     /**
-     * Returns the text data associated with an ENS node and key.
-     * @param node The ENS node to query.
+     * Returns the text data associated with an INS node and key.
+     * @param node The INS node to query.
      * @param key The text data key to query.
      * @return The associated text data.
      */

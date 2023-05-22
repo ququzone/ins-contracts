@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17 <0.9.0;
 
-import "../registry/ENS.sol";
+import "../registry/INS.sol";
 import "./profiles/ABIResolver.sol";
 import "./profiles/AddrResolver.sol";
 import "./profiles/ContentHashResolver.sol";
@@ -28,7 +28,7 @@ contract PublicResolver is
     TextResolver,
     ReverseClaimer
 {
-    ENS immutable ens;
+    INS immutable ins;
     INameWrapper immutable nameWrapper;
     address immutable trustedETHController;
     address immutable trustedReverseRegistrar;
@@ -56,12 +56,12 @@ contract PublicResolver is
     event Approved(address owner, bytes32 indexed node, address indexed delegate, bool indexed approved);
 
     constructor(
-        ENS _ens,
+        INS _ins,
         INameWrapper wrapperAddress,
         address _trustedETHController,
         address _trustedReverseRegistrar
-    ) ReverseClaimer(_ens, msg.sender) {
-        ens = _ens;
+    ) ReverseClaimer(_ins, msg.sender) {
+        ins = _ins;
         nameWrapper = wrapperAddress;
         trustedETHController = _trustedETHController;
         trustedReverseRegistrar = _trustedReverseRegistrar;
@@ -105,7 +105,7 @@ contract PublicResolver is
         if (msg.sender == trustedETHController || msg.sender == trustedReverseRegistrar) {
             return true;
         }
-        address owner = ens.owner(node);
+        address owner = ins.owner(node);
         if (owner == address(nameWrapper)) {
             owner = nameWrapper.ownerOf(uint256(node));
         }

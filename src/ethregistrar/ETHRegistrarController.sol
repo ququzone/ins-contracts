@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ~0.8.17;
+pragma solidity >=0.8.4;
 
 import {BaseRegistrarImplementation} from "./BaseRegistrarImplementation.sol";
 import {StringUtils} from "./StringUtils.sol";
 import {Resolver} from "../resolvers/Resolver.sol";
-import {ENS} from "../registry/ENS.sol";
+import {INS} from "../registry/INS.sol";
 import {ReverseRegistrar} from "../reverseRegistrar/ReverseRegistrar.sol";
 import {ReverseClaimer} from "../reverseRegistrar/ReverseClaimer.sol";
 import {IETHRegistrarController, IPriceOracle} from "./IETHRegistrarController.sol";
@@ -62,8 +62,8 @@ contract ETHRegistrarController is Ownable, IETHRegistrarController, IERC165, ER
         uint256 _maxCommitmentAge,
         ReverseRegistrar _reverseRegistrar,
         INameWrapper _nameWrapper,
-        ENS _ens
-    ) ReverseClaimer(_ens, msg.sender) {
+        INS _ins
+    ) ReverseClaimer(_ins, msg.sender) {
         if (_maxCommitmentAge <= _minCommitmentAge) {
             revert MaxCommitmentAgeTooLow();
         }

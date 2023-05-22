@@ -6,7 +6,7 @@ import {Controllable} from "./Controllable.sol";
 import {INameWrapper, CANNOT_UNWRAP, CANNOT_BURN_FUSES, CANNOT_TRANSFER, CANNOT_SET_RESOLVER, CANNOT_SET_TTL, CANNOT_CREATE_SUBDOMAIN, CANNOT_APPROVE, PARENT_CANNOT_CONTROL, CAN_DO_EVERYTHING, IS_DOT_ETH, CAN_EXTEND_EXPIRY, PARENT_CONTROLLED_FUSES, USER_SETTABLE_FUSES} from "./INameWrapper.sol";
 import {INameWrapperUpgrade} from "./INameWrapperUpgrade.sol";
 import {IMetadataService} from "./IMetadataService.sol";
-import {ENS} from "../registry/ENS.sol";
+import {INS} from "../registry/INS.sol";
 import {IReverseRegistrar} from "../reverseRegistrar/IReverseRegistrar.sol";
 import {ReverseClaimer} from "../reverseRegistrar/ReverseClaimer.sol";
 import {IBaseRegistrar} from "../ethregistrar/IBaseRegistrar.sol";
@@ -39,7 +39,7 @@ contract NameWrapper is
 {
     using BytesUtils for bytes;
 
-    ENS public immutable ens;
+    INS public immutable ins;
     IBaseRegistrar public immutable registrar;
     IMetadataService public metadataService;
     mapping(bytes32 => bytes) public names;
@@ -54,11 +54,11 @@ contract NameWrapper is
     uint64 private constant MAX_EXPIRY = type(uint64).max;
 
     constructor(
-        ENS _ens,
+        INS _ins,
         IBaseRegistrar _registrar,
         IMetadataService _metadataService
-    ) ReverseClaimer(_ens, msg.sender) {
-        ens = _ens;
+    ) ReverseClaimer(_ins, msg.sender) {
+        ins = _ins;
         registrar = _registrar;
         metadataService = _metadataService;
 
@@ -166,14 +166,14 @@ contract NameWrapper is
     function setUpgradeContract(INameWrapperUpgrade _upgradeAddress) public onlyOwner {
         if (address(upgradeContract) != address(0)) {
             registrar.setApprovalForAll(address(upgradeContract), false);
-            ens.setApprovalForAll(address(upgradeContract), false);
+            ins.setApprovalForAll(address(upgradeContract), false);
         }
 
         upgradeContract = _upgradeAddress;
 
         if (address(upgradeContract) != address(0)) {
             registrar.setApprovalForAll(address(upgradeContract), true);
-            ens.setApprovalForAll(address(upgradeContract), true);
+            ins.setApprovalForAll(address(upgradeContract), true);
         }
     }
 
@@ -254,7 +254,7 @@ contract NameWrapper is
      * @param label The label to register (Eg, 'foo' for 'foo.eth').
      * @param wrappedOwner The owner of the wrapped name.
      * @param duration The duration, in seconds, to register the name for.
-     * @param resolver The resolver address to set on the ENS registry (optional).
+     * @param resolver The resolver address to set on the INS registry (optional).
      * @param ownerControlledFuses Initial owner-controlled fuses to set
      * @return registrarExpiry The expiry date of the new name on the .eth registrar, in seconds since the Unix epoch.
      */
@@ -286,7 +286,7 @@ contract NameWrapper is
 
         // Do not set anything in wrapper if name is not wrapped
         try registrar.ownerOf(tokenId) returns (address registrarOwner) {
-            if (registrarOwner != address(this) || ens.owner(node) != address(this)) {
+            if (registrarOwner != address(this) || ins.owner(node) != address(this)) {
                 return registrarExpiry;
             }
         } catch {
@@ -322,17 +322,17 @@ contract NameWrapper is
             revert IncompatibleParent();
         }
 
-        address owner = ens.owner(node);
+        address owner = ins.owner(node);
 
-        if (owner != msg.sender && !ens.isApprovedForAll(owner, msg.sender)) {
+        if (owner != msg.sender && !ins.isApprovedForAll(owner, msg.sender)) {
             revert Unauthorised(node, msg.sender);
         }
 
         if (resolver != address(0)) {
-            ens.setResolver(node, resolver);
+            ins.setResolver(node, resolver);
         }
 
-        ens.setOwner(node, address(this));
+        ins.setOwner(node, address(this));
 
         _wrap(node, name, wrappedOwner, 0, 0);
     }
@@ -473,7 +473,7 @@ contract NameWrapper is
         bytes32 node = _makeNode(parentNode, labelhash);
         _checkFusesAreSettable(node, fuses);
         (address owner, uint32 oldFuses, uint64 oldExpiry) = getData(uint256(node));
-        if (owner == address(0) || ens.owner(node) != address(this)) {
+        if (owner == address(0) || ins.owner(node) != address(this)) {
             revert NameIsNotWrapped();
         }
         // max expiry is set to the expiry of the parent
@@ -525,7 +525,7 @@ contract NameWrapper is
         expiry = _checkParentFusesAndExpiry(parentNode, node, fuses, expiry);
 
         if (!_isWrapped(node)) {
-            ens.setSubnodeOwner(parentNode, labelhash, address(this));
+            ins.setSubnodeOwner(parentNode, labelhash, address(this));
             _wrap(node, name, owner, fuses, expiry);
         } else {
             _updateName(parentNode, node, label, owner, fuses, expiry);
@@ -560,16 +560,16 @@ contract NameWrapper is
         _saveLabel(parentNode, node, label);
         expiry = _checkParentFusesAndExpiry(parentNode, node, fuses, expiry);
         if (!_isWrapped(node)) {
-            ens.setSubnodeRecord(parentNode, labelhash, address(this), resolver, ttl);
+            ins.setSubnodeRecord(parentNode, labelhash, address(this), resolver, ttl);
             _storeNameAndWrap(parentNode, node, label, owner, fuses, expiry);
         } else {
-            ens.setSubnodeRecord(parentNode, labelhash, address(this), resolver, ttl);
+            ins.setSubnodeRecord(parentNode, labelhash, address(this), resolver, ttl);
             _updateName(parentNode, node, label, owner, fuses, expiry);
         }
     }
 
     /**
-     * @notice Sets records for the name in the ENS Registry
+     * @notice Sets records for the name in the INS Registry
      * @param node Namehash of the name to set a record for
      * @param owner New owner in the registry
      * @param resolver Resolver contract
@@ -582,7 +582,7 @@ contract NameWrapper is
         address resolver,
         uint64 ttl
     ) public onlyTokenOwner(node) operationAllowed(node, CANNOT_TRANSFER | CANNOT_SET_RESOLVER | CANNOT_SET_TTL) {
-        ens.setRecord(node, address(this), resolver, ttl);
+        ins.setRecord(node, address(this), resolver, ttl);
         if (owner == address(0)) {
             (, uint32 fuses, ) = getData(uint256(node));
             if (fuses & IS_DOT_ETH == IS_DOT_ETH) {
@@ -605,7 +605,7 @@ contract NameWrapper is
         bytes32 node,
         address resolver
     ) public onlyTokenOwner(node) operationAllowed(node, CANNOT_SET_RESOLVER) {
-        ens.setResolver(node, resolver);
+        ins.setResolver(node, resolver);
     }
 
     /**
@@ -615,7 +615,7 @@ contract NameWrapper is
      */
 
     function setTTL(bytes32 node, uint64 ttl) public onlyTokenOwner(node) operationAllowed(node, CANNOT_SET_TTL) {
-        ens.setTTL(node, ttl);
+        ins.setTTL(node, ttl);
     }
 
     /**
@@ -654,7 +654,7 @@ contract NameWrapper is
             // protects a name that has been unwrapped with PCC and doesn't allow the parent to take control by recreating it if unexpired
             (subnodeOwner == address(0) ||
                 // protects a name that has been burnt and doesn't allow the parent to take control by recreating it if unexpired
-                ens.owner(subnode) == address(0))
+                ins.owner(subnode) == address(0))
         ) {
             (, uint32 parentFuses, ) = getData(uint256(parentNode));
             if (parentFuses & CANNOT_CREATE_SUBDOMAIN != 0) {
@@ -906,7 +906,7 @@ contract NameWrapper is
         _wrap(node, name, wrappedOwner, fuses | PARENT_CANNOT_CONTROL | IS_DOT_ETH, expiry);
 
         if (resolver != address(0)) {
-            ens.setResolver(node, resolver);
+            ins.setResolver(node, resolver);
         }
     }
 
@@ -917,7 +917,7 @@ contract NameWrapper is
 
         // Burn token and fuse data
         _burn(uint256(node));
-        ens.setOwner(node, owner);
+        ins.setOwner(node, owner);
 
         emit NameUnwrapped(node, owner);
     }
@@ -953,7 +953,7 @@ contract NameWrapper is
     }
 
     function _isWrapped(bytes32 node) internal view returns (bool) {
-        return ownerOf(uint256(node)) != address(0) && ens.owner(node) == address(this);
+        return ownerOf(uint256(node)) != address(0) && ins.owner(node) == address(this);
     }
 
     function _isETH2LDInGracePeriod(uint32 fuses, uint64 expiry) internal view returns (bool) {

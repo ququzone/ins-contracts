@@ -8,8 +8,8 @@ abstract contract NameResolver is INameResolver, ResolverBase {
     mapping(uint64 => mapping(bytes32 => string)) versionable_names;
 
     /**
-     * Sets the name associated with an ENS node, for reverse records.
-     * May only be called by the owner of that node in the ENS registry.
+     * Sets the name associated with an INS node, for reverse records.
+     * May only be called by the owner of that node in the INS registry.
      * @param node The node to update.
      */
     function setName(bytes32 node, string calldata newName) external virtual authorised(node) {
@@ -18,9 +18,9 @@ abstract contract NameResolver is INameResolver, ResolverBase {
     }
 
     /**
-     * Returns the name associated with an ENS node, for reverse records.
+     * Returns the name associated with an INS node, for reverse records.
      * Defined in EIP181.
-     * @param node The ENS node to query.
+     * @param node The INS node to query.
      * @return The associated name.
      */
     function name(bytes32 node) external view virtual override returns (string memory) {

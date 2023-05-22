@@ -11,8 +11,8 @@ abstract contract AddrResolver is IAddrResolver, IAddressResolver, ResolverBase 
     mapping(uint64 => mapping(bytes32 => mapping(uint256 => bytes))) versionable_addresses;
 
     /**
-     * Sets the address associated with an ENS node.
-     * May only be called by the owner of that node in the ENS registry.
+     * Sets the address associated with an INS node.
+     * May only be called by the owner of that node in the INS registry.
      * @param node The node to update.
      * @param a The address to set.
      */
@@ -21,8 +21,8 @@ abstract contract AddrResolver is IAddrResolver, IAddressResolver, ResolverBase 
     }
 
     /**
-     * Returns the address associated with an ENS node.
-     * @param node The ENS node to query.
+     * Returns the address associated with an INS node.
+     * @param node The INS node to query.
      * @return The associated address.
      */
     function addr(bytes32 node) public view virtual override returns (address payable) {

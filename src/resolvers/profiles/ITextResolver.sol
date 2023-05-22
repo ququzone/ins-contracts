@@ -5,8 +5,8 @@ interface ITextResolver {
     event TextChanged(bytes32 indexed node, string indexed indexedKey, string key, string value);
 
     /**
-     * Returns the text data associated with an ENS node and key.
-     * @param node The ENS node to query.
+     * Returns the text data associated with an INS node and key.
+     * @param node The INS node to query.
      * @param key The text data key to query.
      * @return The associated text data.
      */

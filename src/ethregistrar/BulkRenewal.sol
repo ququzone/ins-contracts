@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ~0.8.17;
+pragma solidity >=0.8.4;
 
-import "../registry/ENS.sol";
+import "../registry/INS.sol";
 import "./ETHRegistrarController.sol";
 import "./IETHRegistrarController.sol";
 import "../resolvers/Resolver.sol";
@@ -13,14 +13,14 @@ import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 contract BulkRenewal is IBulkRenewal {
     bytes32 private constant ETH_NAMEHASH = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
 
-    ENS public immutable ens;
+    INS public immutable ins;
 
-    constructor(ENS _ens) {
-        ens = _ens;
+    constructor(INS _ins) {
+        ins = _ins;
     }
 
     function getController() internal view returns (ETHRegistrarController) {
-        Resolver r = Resolver(ens.resolver(ETH_NAMEHASH));
+        Resolver r = Resolver(ins.resolver(ETH_NAMEHASH));
         return ETHRegistrarController(r.interfaceImplementer(ETH_NAMEHASH, type(IETHRegistrarController).interfaceId));
     }
 

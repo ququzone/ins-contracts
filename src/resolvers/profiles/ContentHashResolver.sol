@@ -8,8 +8,8 @@ abstract contract ContentHashResolver is IContentHashResolver, ResolverBase {
     mapping(uint64 => mapping(bytes32 => bytes)) versionable_hashes;
 
     /**
-     * Sets the contenthash associated with an ENS node.
-     * May only be called by the owner of that node in the ENS registry.
+     * Sets the contenthash associated with an INS node.
+     * May only be called by the owner of that node in the INS registry.
      * @param node The node to update.
      * @param hash The contenthash to set
      */
@@ -19,8 +19,8 @@ abstract contract ContentHashResolver is IContentHashResolver, ResolverBase {
     }
 
     /**
-     * Returns the contenthash associated with an ENS node.
-     * @param node The ENS node to query.
+     * Returns the contenthash associated with an INS node.
+     * @param node The INS node to query.
      * @return The associated contenthash.
      */
     function contenthash(bytes32 node) external view virtual override returns (bytes memory) {
