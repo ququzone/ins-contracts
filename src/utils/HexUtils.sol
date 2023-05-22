@@ -65,11 +65,7 @@ library HexUtils {
      * @param idx The offset to start parsing at
      * @param lastIdx The (exclusive) last index in `str` to consider. Use `str.length` to scan the whole string.
      */
-    function hexToAddress(
-        bytes memory str,
-        uint256 idx,
-        uint256 lastIdx
-    ) internal pure returns (address, bool) {
+    function hexToAddress(bytes memory str, uint256 idx, uint256 lastIdx) internal pure returns (address, bool) {
         if (lastIdx - idx < 40) return (address(0x0), false);
         (bytes32 r, bool valid) = hexStringToBytes32(str, idx, lastIdx);
         return (address(uint160(uint256(r))), valid);

@@ -65,22 +65,14 @@ contract StablePriceOracle is IPriceOracle {
     /**
      * @dev Returns the pricing premium in wei.
      */
-    function premium(
-        string calldata name,
-        uint256 expires,
-        uint256 duration
-    ) external view returns (uint256) {
+    function premium(string calldata name, uint256 expires, uint256 duration) external view returns (uint256) {
         return attoUSDToWei(_premium(name, expires, duration));
     }
 
     /**
      * @dev Returns the pricing premium in internal base units.
      */
-    function _premium(
-        string memory name,
-        uint256 expires,
-        uint256 duration
-    ) internal view virtual returns (uint256) {
+    function _premium(string memory name, uint256 expires, uint256 duration) internal view virtual returns (uint256) {
         return 0;
     }
 
@@ -94,11 +86,7 @@ contract StablePriceOracle is IPriceOracle {
         return (amount * ethPrice) / 1e8;
     }
 
-    function supportsInterface(
-        bytes4 interfaceID
-    ) public view virtual returns (bool) {
-        return
-            interfaceID == type(IERC165).interfaceId ||
-            interfaceID == type(IPriceOracle).interfaceId;
+    function supportsInterface(bytes4 interfaceID) public view virtual returns (bool) {
+        return interfaceID == type(IERC165).interfaceId || interfaceID == type(IPriceOracle).interfaceId;
     }
 }

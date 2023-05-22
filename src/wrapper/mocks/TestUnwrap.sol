@@ -8,8 +8,7 @@ import {BytesUtils} from "../BytesUtils.sol";
 contract TestUnwrap is Ownable {
     using BytesUtils for bytes;
 
-    bytes32 private constant ETH_NODE =
-        0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+    bytes32 private constant ETH_NODE = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
 
     ENS public immutable ens;
     IBaseRegistrar public immutable registrar;
@@ -20,10 +19,7 @@ contract TestUnwrap is Ownable {
         registrar = _registrar;
     }
 
-    function setWrapperApproval(
-        address wrapper,
-        bool approved
-    ) public onlyOwner {
+    function setWrapperApproval(address wrapper, bool approved) public onlyOwner {
         approvedWrapper[wrapper] = approved;
     }
 
@@ -69,18 +65,12 @@ contract TestUnwrap is Ownable {
         }
     }
 
-    function _unwrapETH2LD(
-        bytes32 labelhash,
-        address wrappedOwner,
-        address sender
-    ) private {
+    function _unwrapETH2LD(bytes32 labelhash, address wrappedOwner, address sender) private {
         uint256 tokenId = uint256(labelhash);
         address registrant = registrar.ownerOf(tokenId);
 
         require(
-            approvedWrapper[sender] &&
-                sender == registrant &&
-                registrar.isApprovedForAll(registrant, address(this)),
+            approvedWrapper[sender] && sender == registrant && registrar.isApprovedForAll(registrant, address(this)),
             "Unauthorised"
         );
 
@@ -88,27 +78,18 @@ contract TestUnwrap is Ownable {
         registrar.transferFrom(registrant, wrappedOwner, tokenId);
     }
 
-    function _unwrapSubnode(
-        bytes32 node,
-        address newOwner,
-        address sender
-    ) private {
+    function _unwrapSubnode(bytes32 node, address newOwner, address sender) private {
         address owner = ens.owner(node);
 
         require(
-            approvedWrapper[sender] &&
-                owner == sender &&
-                ens.isApprovedForAll(owner, address(this)),
+            approvedWrapper[sender] && owner == sender && ens.isApprovedForAll(owner, address(this)),
             "Unauthorised"
         );
 
         ens.setOwner(node, newOwner);
     }
 
-    function _makeNode(
-        bytes32 node,
-        bytes32 labelhash
-    ) private pure returns (bytes32) {
+    function _makeNode(bytes32 node, bytes32 labelhash) private pure returns (bytes32) {
         return keccak256(abi.encodePacked(node, labelhash));
     }
 }

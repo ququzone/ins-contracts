@@ -47,23 +47,13 @@ contract PublicResolver is
      * the set of token approvals.
      * (owner, name, delegate) => approved
      */
-    mapping(address => mapping(bytes32 => mapping(address => bool)))
-        private _tokenApprovals;
+    mapping(address => mapping(bytes32 => mapping(address => bool))) private _tokenApprovals;
 
     // Logged when an operator is added or removed.
-    event ApprovalForAll(
-        address indexed owner,
-        address indexed operator,
-        bool approved
-    );
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
     // Logged when a delegate is approved or  an approval is revoked.
-    event Approved(
-        address owner,
-        bytes32 indexed node,
-        address indexed delegate,
-        bool indexed approved
-    );
+    event Approved(address owner, bytes32 indexed node, address indexed delegate, bool indexed approved);
 
     constructor(
         ENS _ens,
@@ -81,10 +71,7 @@ contract PublicResolver is
      * @dev See {IERC1155-setApprovalForAll}.
      */
     function setApprovalForAll(address operator, bool approved) external {
-        require(
-            msg.sender != operator,
-            "ERC1155: setting approval status for self"
-        );
+        require(msg.sender != operator, "ERC1155: setting approval status for self");
 
         _operatorApprovals[msg.sender][operator] = approved;
         emit ApprovalForAll(msg.sender, operator, approved);
@@ -93,10 +80,7 @@ contract PublicResolver is
     /**
      * @dev See {IERC1155-isApprovedForAll}.
      */
-    function isApprovedForAll(
-        address account,
-        address operator
-    ) public view returns (bool) {
+    function isApprovedForAll(address account, address operator) public view returns (bool) {
         return _operatorApprovals[account][operator];
     }
 
@@ -113,29 +97,19 @@ contract PublicResolver is
     /**
      * @dev Check to see if the delegate has been approved by the owner for the node.
      */
-    function isApprovedFor(
-        address owner,
-        bytes32 node,
-        address delegate
-    ) public view returns (bool) {
+    function isApprovedFor(address owner, bytes32 node, address delegate) public view returns (bool) {
         return _tokenApprovals[owner][node][delegate];
     }
 
     function isAuthorised(bytes32 node) internal view override returns (bool) {
-        if (
-            msg.sender == trustedETHController ||
-            msg.sender == trustedReverseRegistrar
-        ) {
+        if (msg.sender == trustedETHController || msg.sender == trustedReverseRegistrar) {
             return true;
         }
         address owner = ens.owner(node);
         if (owner == address(nameWrapper)) {
             owner = nameWrapper.ownerOf(uint256(node));
         }
-        return
-            owner == msg.sender ||
-            isApprovedForAll(owner, msg.sender) ||
-            isApprovedFor(owner, node, msg.sender);
+        return owner == msg.sender || isApprovedForAll(owner, msg.sender) || isApprovedFor(owner, node, msg.sender);
     }
 
     function supportsInterface(

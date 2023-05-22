@@ -5,16 +5,9 @@ interface IReverseRegistrar {
 
     function claim(address owner) external returns (bytes32);
 
-    function claimForAddr(
-        address addr,
-        address owner,
-        address resolver
-    ) external returns (bytes32);
+    function claimForAddr(address addr, address owner, address resolver) external returns (bytes32);
 
-    function claimWithResolver(
-        address owner,
-        address resolver
-    ) external returns (bytes32);
+    function claimWithResolver(address owner, address resolver) external returns (bytes32);
 
     function setName(string memory name) external returns (bytes32);
 

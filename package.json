@@ -2,7 +2,15 @@
   "name": "ins-contracts",
   "version": "0.1.0",
   "license": "MIT",
+  "scripts": {
+    "compile": "forge compile",
+    "lint": "prettier --write **.sol"
+  },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8",
+    "prettier-plugin-solidity": "^1.1.3"
   }
 }

@@ -12,24 +12,15 @@ contract TestNameWrapperReentrancy is ERC165, IERC1155Receiver {
     bytes32 labelHash;
     uint256 tokenId;
 
-    constructor(
-        address _owner,
-        INameWrapper _nameWrapper,
-        bytes32 _parentNode,
-        bytes32 _labelHash
-    ) {
+    constructor(address _owner, INameWrapper _nameWrapper, bytes32 _parentNode, bytes32 _labelHash) {
         owner = _owner;
         nameWrapper = _nameWrapper;
         parentNode = _parentNode;
         labelHash = _labelHash;
     }
 
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public view virtual override(ERC165, IERC165) returns (bool) {
-        return
-            interfaceId == type(IERC1155Receiver).interfaceId ||
-            super.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+        return interfaceId == type(IERC1155Receiver).interfaceId || super.supportsInterface(interfaceId);
     }
 
     function onERC1155Received(
