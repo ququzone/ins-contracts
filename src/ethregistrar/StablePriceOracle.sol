@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
 import "./IPriceOracle.sol";
@@ -72,7 +72,7 @@ contract StablePriceOracle is IPriceOracle {
     /**
      * @dev Returns the pricing premium in internal base units.
      */
-    function _premium(string memory name, uint256 expires, uint256 duration) internal view virtual returns (uint256) {
+    function _premium(string memory, uint256, uint256) internal view virtual returns (uint256) {
         return 0;
     }
 

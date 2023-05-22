@@ -120,9 +120,9 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
         address resolver,
         string memory name
     ) public override returns (bytes32) {
-        bytes32 node = claimForAddr(addr, owner, resolver);
-        NameResolver(resolver).setName(node, name);
-        return node;
+        bytes32 _node = claimForAddr(addr, owner, resolver);
+        NameResolver(resolver).setName(_node, name);
+        return _node;
     }
 
     /**

@@ -1,5 +1,6 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
+
 import {INameWrapperUpgrade} from "../INameWrapperUpgrade.sol";
 import "../../registry/INS.sol";
 import "../../ethregistrar/IBaseRegistrar.sol";

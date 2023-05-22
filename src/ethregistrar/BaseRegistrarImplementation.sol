@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
 import "../registry/INS.sol";
@@ -160,7 +160,7 @@ contract BaseRegistrarImplementation is ERC721, IBaseRegistrar, Ownable {
         ins.setSubnodeOwner(baseNode, bytes32(id), owner);
     }
 
-    function supportsInterface(bytes4 interfaceID) public view override(ERC721, IERC165) returns (bool) {
+    function supportsInterface(bytes4 interfaceID) public pure override(ERC721, IERC165) returns (bool) {
         return interfaceID == INTERFACE_META_ID || interfaceID == ERC721_ID || interfaceID == RECLAIM_ID;
     }
 }

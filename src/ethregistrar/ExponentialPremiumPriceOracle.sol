@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
 import "./StablePriceOracle.sol";
@@ -55,13 +55,13 @@ contract ExponentialPremiumPriceOracle is StablePriceOracle {
 
     /**
      * @dev Returns the premium price at current time elapsed
-     * @param startPremium starting price
-     * @param elapsed time past since expiry
+     * @param _startPremium starting price
+     * @param _elapsed time past since expiry
      */
-    function decayedPremium(uint256 startPremium, uint256 elapsed) public pure returns (uint256) {
-        uint256 daysPast = (elapsed * PRECISION) / 1 days;
+    function decayedPremium(uint256 _startPremium, uint256 _elapsed) public pure returns (uint256) {
+        uint256 daysPast = (_elapsed * PRECISION) / 1 days;
         uint256 intDays = daysPast / PRECISION;
-        uint256 premium = startPremium >> intDays;
+        uint256 premium = _startPremium >> intDays;
         uint256 partDay = (daysPast - intDays * PRECISION);
         uint256 fraction = (partDay * (2 ** 16)) / PRECISION;
         uint256 totalPremium = addFractionalPremium(fraction, premium);
