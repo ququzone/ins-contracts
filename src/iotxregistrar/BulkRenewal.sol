@@ -11,7 +11,7 @@ import "./IPriceOracle.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 contract BulkRenewal is IBulkRenewal {
-    bytes32 private constant ETH_NAMEHASH = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+    bytes32 private constant IO_NAMEHASH = 0xb2b692c69df4aa3b0a24634d20a3ba1b44c3299d09d6c4377577e20b09e68395;
 
     INS public immutable ins;
 
@@ -20,9 +20,8 @@ contract BulkRenewal is IBulkRenewal {
     }
 
     function getController() internal view returns (IOTXRegistrarController) {
-        Resolver r = Resolver(ins.resolver(ETH_NAMEHASH));
-        return
-            IOTXRegistrarController(r.interfaceImplementer(ETH_NAMEHASH, type(IIOTXRegistrarController).interfaceId));
+        Resolver r = Resolver(ins.resolver(IO_NAMEHASH));
+        return IOTXRegistrarController(r.interfaceImplementer(IO_NAMEHASH, type(IIOTXRegistrarController).interfaceId));
     }
 
     function rentPrice(string[] calldata names, uint256 duration) external view override returns (uint256 total) {

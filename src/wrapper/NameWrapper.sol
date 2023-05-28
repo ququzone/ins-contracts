@@ -46,8 +46,9 @@ contract NameWrapper is
     string public constant name = "NameWrapper";
 
     uint64 private constant GRACE_PERIOD = 90 days;
-    bytes32 private constant ETH_NODE = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
-    bytes32 private constant ETH_LABELHASH = 0x4f5b812789fc606be1b3b16908db13fc7a9adf7ca72641f84d75b47069d3d7f0;
+    bytes32 private constant IO_NODE = 0xb2b692c69df4aa3b0a24634d20a3ba1b44c3299d09d6c4377577e20b09e68395;
+    // keccak256("io")
+    bytes32 private constant IOTX_LABELHASH = 0x51143fc2477b19ad285ce702e5e9feb0f57c9cb4dbe9f081121e37c240ec6613;
     bytes32 private constant ROOT_NODE = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
     INameWrapperUpgrade public upgradeContract;
@@ -62,12 +63,12 @@ contract NameWrapper is
         registrar = _registrar;
         metadataService = _metadataService;
 
-        /* Burn PARENT_CANNOT_CONTROL and CANNOT_UNWRAP fuses for ROOT_NODE and ETH_NODE and set expiry to max */
+        /* Burn PARENT_CANNOT_CONTROL and CANNOT_UNWRAP fuses for ROOT_NODE and IO_NODE and set expiry to max */
 
-        _setData(uint256(ETH_NODE), address(0), uint32(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP), MAX_EXPIRY);
+        _setData(uint256(IO_NODE), address(0), uint32(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP), MAX_EXPIRY);
         _setData(uint256(ROOT_NODE), address(0), uint32(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP), MAX_EXPIRY);
         names[ROOT_NODE] = "\x00";
-        names[ETH_NODE] = "\x03eth\x00";
+        names[IO_NODE] = "\x02io\x00";
     }
 
     function supportsInterface(
@@ -83,7 +84,7 @@ contract NameWrapper is
 
     /**
      * @notice Gets the owner of a name
-     * @param id Label as a string of the .eth domain to wrap
+     * @param id Label as a string of the .io domain to wrap
      * @return owner The owner of the name
      */
 
@@ -217,9 +218,9 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Wraps a .eth domain, creating a new token and sending the original ERC721 token to this contract
-     * @dev Can be called by the owner of the name on the .eth registrar or an authorised caller on the registrar
-     * @param label Label as a string of the .eth domain to wrap
+     * @notice Wraps a .io domain, creating a new token and sending the original ERC721 token to this contract
+     * @dev Can be called by the owner of the name on the .io registrar or an authorised caller on the registrar
+     * @param label Label as a string of the .io domain to wrap
      * @param wrappedOwner Owner of the name in this contract
      * @param ownerControlledFuses Initial owner-controlled fuses to set
      * @param resolver Resolver contract address
@@ -234,7 +235,7 @@ contract NameWrapper is
         uint256 tokenId = uint256(keccak256(bytes(label)));
         address registrant = registrar.ownerOf(tokenId);
         if (registrant != msg.sender && !registrar.isApprovedForAll(registrant, msg.sender)) {
-            revert Unauthorised(_makeNode(ETH_NODE, bytes32(tokenId)), msg.sender);
+            revert Unauthorised(_makeNode(IO_NODE, bytes32(tokenId)), msg.sender);
         }
 
         // transfer the token from the user to this contract
@@ -249,14 +250,14 @@ contract NameWrapper is
     }
 
     /**
-     * @dev Registers a new .eth second-level domain and wraps it.
+     * @dev Registers a new .io second-level domain and wraps it.
      *      Only callable by authorised controllers.
-     * @param label The label to register (Eg, 'foo' for 'foo.eth').
+     * @param label The label to register (Eg, 'foo' for 'foo.io').
      * @param wrappedOwner The owner of the wrapped name.
      * @param duration The duration, in seconds, to register the name for.
      * @param resolver The resolver address to set on the INS registry (optional).
      * @param ownerControlledFuses Initial owner-controlled fuses to set
-     * @return registrarExpiry The expiry date of the new name on the .eth registrar, in seconds since the Unix epoch.
+     * @return registrarExpiry The expiry date of the new name on the .io registrar, in seconds since the Unix epoch.
      */
 
     function registerAndWrapETH2LD(
@@ -272,15 +273,15 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Renews a .eth second-level domain.
+     * @notice Renews a .io second-level domain.
      * @dev Only callable by authorised controllers.
-     * @param tokenId The hash of the label to register (eg, `keccak256('foo')`, for 'foo.eth').
+     * @param tokenId The hash of the label to register (eg, `keccak256('foo')`, for 'foo.io').
      * @param duration The number of seconds to renew the name for.
-     * @return expires The expiry date of the name on the .eth registrar, in seconds since the Unix epoch.
+     * @return expires The expiry date of the name on the .io registrar, in seconds since the Unix epoch.
      */
 
     function renew(uint256 tokenId, uint256 duration) external onlyController returns (uint256 expires) {
-        bytes32 node = _makeNode(ETH_NODE, bytes32(tokenId));
+        bytes32 node = _makeNode(IO_NODE, bytes32(tokenId));
 
         uint256 registrarExpiry = registrar.renew(tokenId, duration);
 
@@ -304,7 +305,7 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Wraps a non .eth domain, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
+     * @notice Wraps a non .io domain, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
      * @dev Can be called by the owner in the registry or an authorised caller in the registry
      * @param _name The name to wrap, in DNS format
      * @param _wrappedOwner Owner of the name in this contract
@@ -318,7 +319,7 @@ contract NameWrapper is
 
         names[node] = _name;
 
-        if (parentNode == ETH_NODE) {
+        if (parentNode == IO_NODE) {
             revert IncompatibleParent();
         }
 
@@ -338,10 +339,10 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Unwraps a .eth domain. e.g. vitalik.eth
+     * @notice Unwraps a .io domain. e.g. vitalik.io
      * @dev Can be called by the owner in the wrapper or an authorised caller in the wrapper
-     * @param labelhash Labelhash of the .eth domain
-     * @param registrant Sets the owner in the .eth registrar to this address
+     * @param labelhash Labelhash of the .io domain
+     * @param registrant Sets the owner in the .io registrar to this address
      * @param controller Sets the owner in the registry to this address
      */
 
@@ -349,16 +350,16 @@ contract NameWrapper is
         bytes32 labelhash,
         address registrant,
         address controller
-    ) public onlyTokenOwner(_makeNode(ETH_NODE, labelhash)) {
+    ) public onlyTokenOwner(_makeNode(IO_NODE, labelhash)) {
         if (registrant == address(this)) {
             revert IncorrectTargetOwner(registrant);
         }
-        _unwrap(_makeNode(ETH_NODE, labelhash), controller);
+        _unwrap(_makeNode(IO_NODE, labelhash), controller);
         registrar.safeTransferFrom(address(this), registrant, uint256(labelhash));
     }
 
     /**
-     * @notice Unwraps a non .eth domain, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
+     * @notice Unwraps a non .io domain, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
      * @dev Can be called by the owner in the wrapper or an authorised caller in the wrapper
      * @param parentNode Parent namehash of the name e.g. vitalik.xyz would be namehash('xyz')
      * @param labelhash Labelhash of the name, e.g. vitalik.xyz would be keccak256('vitalik')
@@ -370,7 +371,7 @@ contract NameWrapper is
         bytes32 labelhash,
         address controller
     ) public onlyTokenOwner(_makeNode(parentNode, labelhash)) {
-        if (parentNode == ETH_NODE) {
+        if (parentNode == IO_NODE) {
             revert IncompatibleParent();
         }
         if (controller == address(0x0) || controller == address(this)) {
@@ -435,7 +436,7 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Upgrades a domain of any kind. Could be a .eth name vitalik.eth, a DNSSEC name vitalik.xyz, or a subdomain
+     * @notice Upgrades a domain of any kind. Could be a .io name vitalik.io, a DNSSEC name vitalik.xyz, or a subdomain
      * @dev Can be called by the owner or an authorised caller
      * @param _name The name to upgrade, in DNS format
      * @param _extraData Extra data to pass to the upgrade contract
@@ -705,7 +706,7 @@ contract NameWrapper is
     function isWrapped(bytes32 parentNode, bytes32 labelhash) public view returns (bool) {
         bytes32 node = _makeNode(parentNode, labelhash);
         bool wrapped = _isWrapped(node);
-        if (parentNode != ETH_NODE) {
+        if (parentNode != IO_NODE) {
             return wrapped;
         }
         try registrar.ownerOf(uint256(labelhash)) returns (address owner) {
@@ -746,7 +747,7 @@ contract NameWrapper is
     /***** Internal functions */
 
     function _beforeTransfer(uint256 id, uint32 fuses, uint64 expiry) internal override {
-        // For this check, treat .eth 2LDs as expiring at the start of the grace period.
+        // For this check, treat .io 2LDs as expiring at the start of the grace period.
         if (fuses & IS_DOT_ETH == IS_DOT_ETH) {
             expiry -= GRACE_PERIOD;
         }
@@ -878,7 +879,7 @@ contract NameWrapper is
 
     function _normaliseExpiry(uint64 expiry, uint64 oldExpiry, uint64 maxExpiry) private pure returns (uint64) {
         // Expiry cannot be more than maximum allowed
-        // .eth names will check registrar, non .eth check parent
+        // .io names will check registrar, non .io check parent
         if (expiry > maxExpiry) {
             expiry = maxExpiry;
         }
@@ -898,7 +899,7 @@ contract NameWrapper is
         address resolver
     ) private {
         bytes32 labelhash = keccak256(bytes(label));
-        bytes32 node = _makeNode(ETH_NODE, labelhash);
+        bytes32 node = _makeNode(IO_NODE, labelhash);
         // hardcode dns-encoded eth string for gas savings
         bytes memory _name = _addLabel(label, "\x03eth\x00");
         names[node] = _name;

@@ -9,7 +9,7 @@ import {BytesUtils} from "../BytesUtils.sol";
 contract TestUnwrap is Ownable {
     using BytesUtils for bytes;
 
-    bytes32 private constant ETH_NODE = 0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+    bytes32 private constant IO_NODE = 0xb2b692c69df4aa3b0a24634d20a3ba1b44c3299d09d6c4377577e20b09e68395;
 
     INS public immutable ins;
     IBaseRegistrar public immutable registrar;
@@ -53,7 +53,7 @@ contract TestUnwrap is Ownable {
         bytes32 parentNode = name.namehash(offset);
         bytes32 node = _makeNode(parentNode, labelhash);
 
-        if (parentNode == ETH_NODE) {
+        if (parentNode == IO_NODE) {
             _unwrapETH2LD(labelhash, wrappedOwner, msg.sender);
         } else {
             _unwrapSubnode(node, wrappedOwner, msg.sender);
