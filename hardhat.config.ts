@@ -18,7 +18,7 @@ const config: HardhatUserConfig = {
                 settings: {
                     optimizer: {
                         enabled: true,
-                        runs: 10000,
+                        runs: 1300,
                     },
                 },
             },
@@ -29,6 +29,10 @@ const config: HardhatUserConfig = {
         cache: "./cache_hardhat", // Use a different cache for Hardhat than Foundry
     },
     networks: {
+        hardhat: {
+            saveDeployments: false,
+            tags: ['test', 'use_root'],
+        },
         mainnet: {
             url: "https://babel-api.mainnet.iotex.io",
             tags: ['use_root'],

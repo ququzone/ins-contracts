@@ -4,6 +4,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 const AGGREGATOR = {
   "4689": "0x0F7AbD6b99d5D6876C812dAc22A2c8A8A6297D90",
   "4690": "0xf55dA02f8266eC89A58C6De361cf92ce9cee21fe",
+  "31337": "0x0000000000000000000000000000000000000000"
 }
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
