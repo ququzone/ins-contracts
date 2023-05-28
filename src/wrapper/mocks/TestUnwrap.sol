@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 import "../../registry/INS.sol";
-import "../../ethregistrar/IBaseRegistrar.sol";
+import "../../iotxregistrar/IBaseRegistrar.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BytesUtils} from "../BytesUtils.sol";
 

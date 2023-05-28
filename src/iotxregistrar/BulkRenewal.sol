@@ -2,8 +2,8 @@
 pragma solidity >=0.8.4;
 
 import "../registry/INS.sol";
-import "./ETHRegistrarController.sol";
-import "./IETHRegistrarController.sol";
+import "./IOTXRegistrarController.sol";
+import "./IIOTXRegistrarController.sol";
 import "../resolvers/Resolver.sol";
 import "./IBulkRenewal.sol";
 import "./IPriceOracle.sol";
@@ -19,13 +19,13 @@ contract BulkRenewal is IBulkRenewal {
         ins = _ins;
     }
 
-    function getController() internal view returns (ETHRegistrarController) {
+    function getController() internal view returns (IOTXRegistrarController) {
         Resolver r = Resolver(ins.resolver(ETH_NAMEHASH));
-        return ETHRegistrarController(r.interfaceImplementer(ETH_NAMEHASH, type(IETHRegistrarController).interfaceId));
+        return IOTXRegistrarController(r.interfaceImplementer(ETH_NAMEHASH, type(IIOTXRegistrarController).interfaceId));
     }
 
     function rentPrice(string[] calldata names, uint256 duration) external view override returns (uint256 total) {
-        ETHRegistrarController controller = getController();
+        IOTXRegistrarController controller = getController();
         uint256 length = names.length;
         for (uint256 i = 0; i < length; ) {
             IPriceOracle.Price memory price = controller.rentPrice(names[i], duration);
@@ -37,7 +37,7 @@ contract BulkRenewal is IBulkRenewal {
     }
 
     function renewAll(string[] calldata names, uint256 duration) external payable override {
-        ETHRegistrarController controller = getController();
+        IOTXRegistrarController controller = getController();
         uint256 length = names.length;
         uint256 total;
         for (uint256 i = 0; i < length; ) {
