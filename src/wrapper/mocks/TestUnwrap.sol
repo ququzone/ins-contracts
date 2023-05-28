@@ -24,13 +24,7 @@ contract TestUnwrap is Ownable {
         approvedWrapper[wrapper] = approved;
     }
 
-    function wrapETH2LD(
-        string calldata label,
-        address wrappedOwner,
-        uint32,
-        uint64,
-        address
-    ) public {
+    function wrapETH2LD(string calldata label, address wrappedOwner, uint32, uint64, address) public {
         _unwrapETH2LD(keccak256(bytes(label)), wrappedOwner, msg.sender);
     }
 
@@ -53,7 +47,7 @@ contract TestUnwrap is Ownable {
         uint32,
         uint64,
         address,
-        bytes calldata 
+        bytes calldata
     ) public {
         (bytes32 labelhash, uint256 offset) = name.readLabel(0);
         bytes32 parentNode = name.namehash(offset);

@@ -14,7 +14,7 @@ contract ERC20Recoverable is Ownable {
      * @param _to The address to send the tokens to.
      * @param _token The address of the ERC20 token to recover
      * @param _amount The amount of tokens to recover.
-    */
+     */
     function recoverFunds(address _token, address _to, uint256 _amount) external onlyOwner {
         IERC20(_token).transfer(_to, _amount);
     }

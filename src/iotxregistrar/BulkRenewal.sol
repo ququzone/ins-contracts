@@ -21,7 +21,8 @@ contract BulkRenewal is IBulkRenewal {
 
     function getController() internal view returns (IOTXRegistrarController) {
         Resolver r = Resolver(ins.resolver(ETH_NAMEHASH));
-        return IOTXRegistrarController(r.interfaceImplementer(ETH_NAMEHASH, type(IIOTXRegistrarController).interfaceId));
+        return
+            IOTXRegistrarController(r.interfaceImplementer(ETH_NAMEHASH, type(IIOTXRegistrarController).interfaceId));
     }
 
     function rentPrice(string[] calldata names, uint256 duration) external view override returns (uint256 total) {
