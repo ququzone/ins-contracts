@@ -11,10 +11,9 @@ abstract contract NameResolver {
 }
 
 bytes32 constant lookup = 0x3031323334353637383961626364656600000000000000000000000000000000;
-
+// namehash('addr.reverse')
 bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
-// namehash('addr.reverse')
 contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
     INS public immutable ins;
     NameResolver public defaultResolver;
