@@ -8,7 +8,8 @@
     "lint": "prettier --write **.sol"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.3"
+    "@openzeppelin/contracts": "^4.8.3",
+    "eth-ens-namehash": "^2.0.8"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
