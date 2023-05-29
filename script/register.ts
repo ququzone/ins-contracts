@@ -1,7 +1,5 @@
 import { ethers } from 'hardhat'
 import { namehash } from 'ethers/lib/utils'
-import * as fs from 'fs'
-import * as path from 'path'
 import { keccak256 } from 'js-sha3'
 
 import { IOTXRegistrarController, PublicResolver } from "../typechain"
@@ -16,7 +14,7 @@ async function main() {
     const user = new ethers.Wallet(process.env.USER_KEY!, ethers.provider)
     
     const label = 'hello'
-    const name = 'hello.io'
+    const name = label + '.io'
     const node = namehash(name)
     const secret = '0x' + keccak256('secret')
 

@@ -8,6 +8,7 @@
   },
   "include": [
     "./scripts/**/*.ts",
+    "./script/**/*.ts",
     "./test/**/*.ts",
     "./deploy/**/*.ts",
     "./typings-custom/**/*.ts"
