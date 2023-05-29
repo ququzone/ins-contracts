@@ -16,11 +16,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // @ts-ignore
   const oracleAddress: string = AGGREGATOR[String(chainId)]
   
+  const aggregator = await deploy('AggregatorProxy', {
+    from: deployer,
+    args: [oracleAddress],
+    log: true,
+  })
 
   await deploy('StablePriceOracle', {
     from: deployer,
     args: [
-      oracleAddress,
+      aggregator.address,
       [0, 0, '20294266869609', '5073566717402', '158548959919'],
     ],
     log: true,

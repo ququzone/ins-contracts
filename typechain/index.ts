@@ -54,6 +54,10 @@ export type { DummyProxyRegistry } from "./src/iotxregistrar/mocks/DummyProxyReg
 export { DummyProxyRegistry__factory } from "./factories/src/iotxregistrar/mocks/DummyProxyRegistry__factory";
 export type { AggregatorInterface } from "./src/iotxregistrar/StablePriceOracle.sol/AggregatorInterface";
 export { AggregatorInterface__factory } from "./factories/src/iotxregistrar/StablePriceOracle.sol/AggregatorInterface__factory";
+export type { AggregatorProxy } from "./src/iotxregistrar/StablePriceOracle.sol/AggregatorProxy";
+export { AggregatorProxy__factory } from "./factories/src/iotxregistrar/StablePriceOracle.sol/AggregatorProxy__factory";
+export type { ShadowAggregatorInterface } from "./src/iotxregistrar/StablePriceOracle.sol/ShadowAggregatorInterface";
+export { ShadowAggregatorInterface__factory } from "./factories/src/iotxregistrar/StablePriceOracle.sol/ShadowAggregatorInterface__factory";
 export type { StablePriceOracle } from "./src/iotxregistrar/StablePriceOracle.sol/StablePriceOracle";
 export { StablePriceOracle__factory } from "./factories/src/iotxregistrar/StablePriceOracle.sol/StablePriceOracle__factory";
 export type { StaticBulkRenewal } from "./src/iotxregistrar/StaticBulkRenewal";

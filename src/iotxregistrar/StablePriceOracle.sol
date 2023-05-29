@@ -10,6 +10,26 @@ interface AggregatorInterface {
     function latestAnswer() external view returns (int256);
 }
 
+interface ShadowAggregatorInterface {
+    function latestRoundData()
+        external
+        view
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+}
+
+contract AggregatorProxy is AggregatorInterface {
+    ShadowAggregatorInterface private old;
+
+    constructor(address _old) {
+        old = ShadowAggregatorInterface(_old);
+    }
+
+    function latestAnswer() external view override returns (int256) {
+        (, int256 answer, , , ) = old.latestRoundData();
+        return answer;
+    }
+}
+
 // StablePriceOracle sets a price in USD, based on an oracle.
 contract StablePriceOracle is IPriceOracle {
     using StringUtils for *;

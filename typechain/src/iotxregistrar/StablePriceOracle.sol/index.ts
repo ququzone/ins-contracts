@@ -2,4 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { AggregatorInterface } from "./AggregatorInterface";
+export type { AggregatorProxy } from "./AggregatorProxy";
+export type { ShadowAggregatorInterface } from "./ShadowAggregatorInterface";
 export type { StablePriceOracle } from "./StablePriceOracle";
