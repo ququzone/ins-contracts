@@ -44,6 +44,8 @@ export type { IIOTXRegistrarController } from "./src/iotxregistrar/IIOTXRegistra
 export { IIOTXRegistrarController__factory } from "./factories/src/iotxregistrar/IIOTXRegistrarController__factory";
 export type { ILinearPremiumPriceOracle } from "./src/iotxregistrar/ILinearPremiumPriceOracle";
 export { ILinearPremiumPriceOracle__factory } from "./factories/src/iotxregistrar/ILinearPremiumPriceOracle__factory";
+export type { INameChecker } from "./src/iotxregistrar/INameChecker";
+export { INameChecker__factory } from "./factories/src/iotxregistrar/INameChecker__factory";
 export type { IOTXRegistrarController } from "./src/iotxregistrar/IOTXRegistrarController";
 export { IOTXRegistrarController__factory } from "./factories/src/iotxregistrar/IOTXRegistrarController__factory";
 export type { IPriceOracle } from "./src/iotxregistrar/IPriceOracle";
@@ -64,6 +66,8 @@ export type { StaticBulkRenewal } from "./src/iotxregistrar/StaticBulkRenewal";
 export { StaticBulkRenewal__factory } from "./factories/src/iotxregistrar/StaticBulkRenewal__factory";
 export type { TestResolver } from "./src/iotxregistrar/TestResolver";
 export { TestResolver__factory } from "./factories/src/iotxregistrar/TestResolver__factory";
+export type { ZeroWidthNameChecker } from "./src/iotxregistrar/ZeroWidthNameChecker";
+export { ZeroWidthNameChecker__factory } from "./factories/src/iotxregistrar/ZeroWidthNameChecker__factory";
 export type { INS } from "./src/registry/INS";
 export { INS__factory } from "./factories/src/registry/INS__factory";
 export type { INSRegistry } from "./src/registry/INSRegistry";

@@ -49,6 +49,7 @@ export interface IOTXRegistrarControllerInterface extends utils.Interface {
     "makeCommitment(string,address,uint256,bytes32,address,bytes[],bool,uint16)": FunctionFragment;
     "maxCommitmentAge()": FunctionFragment;
     "minCommitmentAge()": FunctionFragment;
+    "nameChecker()": FunctionFragment;
     "nameWrapper()": FunctionFragment;
     "owner()": FunctionFragment;
     "prices()": FunctionFragment;
@@ -73,6 +74,7 @@ export interface IOTXRegistrarControllerInterface extends utils.Interface {
       | "makeCommitment"
       | "maxCommitmentAge"
       | "minCommitmentAge"
+      | "nameChecker"
       | "nameWrapper"
       | "owner"
       | "prices"
@@ -123,6 +125,10 @@ export interface IOTXRegistrarControllerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "minCommitmentAge",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "nameChecker",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -202,6 +208,10 @@ export interface IOTXRegistrarControllerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "minCommitmentAge",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "nameChecker",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -347,6 +357,8 @@ export interface IOTXRegistrarController extends BaseContract {
 
     minCommitmentAge(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    nameChecker(overrides?: CallOverrides): Promise<[string]>;
+
     nameWrapper(overrides?: CallOverrides): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -447,6 +459,8 @@ export interface IOTXRegistrarController extends BaseContract {
 
   minCommitmentAge(overrides?: CallOverrides): Promise<BigNumber>;
 
+  nameChecker(overrides?: CallOverrides): Promise<string>;
+
   nameWrapper(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -542,6 +556,8 @@ export interface IOTXRegistrarController extends BaseContract {
     maxCommitmentAge(overrides?: CallOverrides): Promise<BigNumber>;
 
     minCommitmentAge(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nameChecker(overrides?: CallOverrides): Promise<string>;
 
     nameWrapper(overrides?: CallOverrides): Promise<string>;
 
@@ -677,6 +693,8 @@ export interface IOTXRegistrarController extends BaseContract {
 
     minCommitmentAge(overrides?: CallOverrides): Promise<BigNumber>;
 
+    nameChecker(overrides?: CallOverrides): Promise<BigNumber>;
+
     nameWrapper(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -775,6 +793,8 @@ export interface IOTXRegistrarController extends BaseContract {
     maxCommitmentAge(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     minCommitmentAge(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nameChecker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nameWrapper(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

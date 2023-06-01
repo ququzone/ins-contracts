@@ -29,6 +29,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
 
+  const nameChecker = await deploy('ZeroWidthNameChecker', {
+    from: deployer,
+    log: true,
+  })
+
   const deployArgs = {
     from: deployer,
     args: [
@@ -38,6 +43,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       86400,
       reverseRegistrar.address,
       nameWrapper.address,
+      nameChecker.address,
       registry.address,
     ],
     log: true,
