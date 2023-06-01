@@ -14,6 +14,7 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {INameWrapper} from "../wrapper/INameWrapper.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
+import {INameChecker} from "./INameChecker.sol";
 
 error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
@@ -42,6 +43,7 @@ contract IOTXRegistrarController is Ownable, IIOTXRegistrarController, IERC165, 
     uint256 public immutable maxCommitmentAge;
     ReverseRegistrar public immutable reverseRegistrar;
     INameWrapper public immutable nameWrapper;
+    INameChecker public immutable nameChecker;
 
     mapping(bytes32 => uint256) public commitments;
 
@@ -62,6 +64,7 @@ contract IOTXRegistrarController is Ownable, IIOTXRegistrarController, IERC165, 
         uint256 _maxCommitmentAge,
         ReverseRegistrar _reverseRegistrar,
         INameWrapper _nameWrapper,
+        INameChecker _nameChecker,
         INS _ins
     ) ReverseClaimer(_ins, msg.sender) {
         if (_maxCommitmentAge <= _minCommitmentAge) {
@@ -78,6 +81,7 @@ contract IOTXRegistrarController is Ownable, IIOTXRegistrarController, IERC165, 
         maxCommitmentAge = _maxCommitmentAge;
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
+        nameChecker = _nameChecker;
     }
 
     function rentPrice(
@@ -88,8 +92,8 @@ contract IOTXRegistrarController is Ownable, IIOTXRegistrarController, IERC165, 
         price = prices.price(name, base.nameExpires(uint256(label)), duration);
     }
 
-    function valid(string memory name) public pure returns (bool) {
-        return name.strlen() >= 3;
+    function valid(string memory name) public view returns (bool) {
+        return nameChecker.valid(name);
     }
 
     function available(string memory name) public view override returns (bool) {
