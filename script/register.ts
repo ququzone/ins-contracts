@@ -12,7 +12,8 @@ async function main() {
     const resolver = (await ethers.getContract("PublicResolver")) as PublicResolver
 
     const user = new ethers.Wallet(process.env.USER_KEY!, ethers.provider)
-    
+    const owner = user.address
+
     const label = 'hello'
     const name = label + '.io'
     const node = namehash(name)
@@ -20,14 +21,14 @@ async function main() {
 
     const commitment = await controller.makeCommitment(
         label,
-        user.address,
+        owner,
         REGISTRATION_TIME,
         secret,
         resolver.address,
         [
             resolver.interface.encodeFunctionData('setAddr(bytes32,address)', [
                 node,
-                user.address,
+                owner,
             ]),
         ],
         true,
@@ -44,14 +45,14 @@ async function main() {
     console.log(`register name: ${node} ...`)
     const tx = await controller.connect(user).register(
         label,
-        user.address,
+        owner,
         REGISTRATION_TIME,
         secret,
         resolver.address,
         [
             resolver.interface.encodeFunctionData('setAddr(bytes32,address)', [
                 node,
-                user.address,
+                owner,
             ]),
         ],
         true,

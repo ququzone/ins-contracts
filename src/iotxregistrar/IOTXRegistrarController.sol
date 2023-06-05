@@ -154,7 +154,7 @@ contract IOTXRegistrarController is Ownable, IIOTXRegistrarController, IERC165, 
         }
 
         if (reverseRecord) {
-            _setReverseRecord(name, resolver, msg.sender);
+            _setReverseRecord(name, resolver, owner);
         }
 
         emit NameRegistered(name, keccak256(bytes(name)), owner, price.base, price.premium, expires);
@@ -219,6 +219,6 @@ contract IOTXRegistrarController is Ownable, IIOTXRegistrarController, IERC165, 
     }
 
     function _setReverseRecord(string memory name, address resolver, address owner) internal {
-        reverseRegistrar.setNameForAddr(msg.sender, owner, resolver, string.concat(name, ".io"));
+        reverseRegistrar.setNameForAddr(owner, owner, resolver, string.concat(name, ".io"));
     }
 }
