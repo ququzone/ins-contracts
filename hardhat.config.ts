@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
         },
         testnet: {
             url: "https://babel-api.testnet.iotex.io",
-            tags: ['test', 'legacy', 'use_root'],
+            tags: ['use_root'],
             chainId: 4690,
             accounts: real_accounts,
         }

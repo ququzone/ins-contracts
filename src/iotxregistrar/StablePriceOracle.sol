@@ -31,15 +31,15 @@ contract AggregatorProxy is AggregatorInterface {
 }
 
 // StablePriceOracle sets a price in USD, based on an oracle.
-contract StablePriceOracle is IPriceOracle {
+contract StablePriceOracle is IPriceOracle, Ownable {
     using StringUtils for *;
 
     // Rent in base price units by length
-    uint256 public immutable price1Letter;
-    uint256 public immutable price2Letter;
-    uint256 public immutable price3Letter;
-    uint256 public immutable price4Letter;
-    uint256 public immutable price5Letter;
+    uint256 public price1Letter;
+    uint256 public price2Letter;
+    uint256 public price3Letter;
+    uint256 public price4Letter;
+    uint256 public price5Letter;
 
     // Oracle address
     AggregatorInterface public immutable usdOracle;
@@ -53,6 +53,26 @@ contract StablePriceOracle is IPriceOracle {
         price3Letter = _rentPrices[2];
         price4Letter = _rentPrices[3];
         price5Letter = _rentPrices[4];
+    }
+
+    function setPrice1Letter(uint256 _price) external onlyOwner {
+        price1Letter = _price;
+    }
+
+    function setPrice2Letter(uint256 _price) external onlyOwner {
+        price2Letter = _price;
+    }
+
+    function setPrice3Letter(uint256 _price) external onlyOwner {
+        price3Letter = _price;
+    }
+
+    function setPrice4Letter(uint256 _price) external onlyOwner {
+        price4Letter = _price;
+    }
+
+    function setPrice5Letter(uint256 _price) external onlyOwner {
+        price5Letter = _price;
     }
 
     function price(
